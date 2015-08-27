@@ -24,7 +24,7 @@ public class Parse {
 	    	}
 	    	
 	    	userList = steamFolder.listFiles();
-	    	userFolder = new File(userList[0].getAbsolutePath()+"\\760");
+	    	userFolder = new File(userList[0].getAbsolutePath()+"\\760\\remote");
 	    	gameList = userFolder.listFiles();
 	}
 	
