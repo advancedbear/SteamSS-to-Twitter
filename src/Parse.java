@@ -12,7 +12,6 @@ public class Parse {
 	
 	public Parse(){
 	    	url = "http://store.steampowered.com/app/";
-	    	url2 = "https://steamidfinder.ru/";
 	    	
 	    	for(int i=0; i<folders.length; i++){
 	    		steamFolder = new File(folders[i]);
