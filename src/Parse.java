@@ -40,4 +40,9 @@ public class Parse {
         Elements elements = document.select("div.apphub_AppName");
         return elements.text();
 	}
+	
+	public File[] listImage(int num){
+		imageList = gameList[num].listFiles();
+		return imageList;
+	}
 }
