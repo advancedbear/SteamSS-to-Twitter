@@ -59,4 +59,25 @@ public class Tweet {
 				}
 			}
 	}
+	/* 複数枚画像アップロードメソッドは未完成。
+	 * http://qiita.com/takke/items/2d9a426efcedeee5f02f を参考に。
+	public void tweet(String t, File[] fs){
+		try {
+			for(int i=0;i< fs.length; i++){
+				String medias = "media"+i;
+				twitter.uploadMedia(fs[i]);
+			}
+			StatusUpdate status = new StatusUpdate(t);
+			status.setMediaIds(new long[fs.length]{});
+			twitter.updateStatus(new StatusUpdate(t));
+		} catch (TwitterException e) {
+			e.printStackTrace();
+			if (e.getStatusCode() == 403) {
+				System.out.println("140文字を超えています。");
+			} else if (e.getStatusCode() == 400) {
+				System.out.println("タグ形式が不正です。");
+			}
+		}
+	}
+	*/
 }

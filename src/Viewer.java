@@ -1,6 +1,9 @@
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.awt.event.*;
+import java.awt.MediaTracker;
 import java.io.*;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
@@ -10,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.*;
@@ -18,15 +23,20 @@ import java.awt.Color;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Viewer extends JFrame implements ActionListener {
+public class Viewer extends JFrame implements ActionListener, ListSelectionListener {
 
 	private JFrame frmSteamScreenshotUploader;
 
-	JComboBox gameTitle = new JComboBox();
-	JList list = new JList();
-	JLabel imagePlace = new JLabel("New label");
+	JComboBox<String> gameTitle;
+	DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+	JList<String> list;
+	DefaultListModel<String> Lmodel = new DefaultListModel<String>();
+	JLabel imagePlace = new JLabel("THIS IS NOT IMAGE FILE.");
 	JLabel accountName = new JLabel("Please login first.");
 	JButton auth = new JButton("Login");
 	JTextArea text = new JTextArea();
@@ -35,12 +45,12 @@ public class Viewer extends JFrame implements ActionListener {
 	File token = new File("token");
 	boolean loading = false;
 	boolean authentication = false;
-	
+
 	Tweet t = new Tweet();
 	Parse p = new Parse();
-	
+
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -69,17 +79,31 @@ public class Viewer extends JFrame implements ActionListener {
 		frmSteamScreenshotUploader.setBounds(100, 100, 640, 480);
 		frmSteamScreenshotUploader.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSteamScreenshotUploader.getContentPane().setLayout(null);
-		
+		String s;
+		model.addElement("-- Game Title --");
+		for (File f : p.gameList) {
+			try {
+				String fn = f.getName();
+				s = p.getTitle(Integer.parseInt(fn));
+				model.addElement(s);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		gameTitle = new JComboBox<String>(model);
 		gameTitle.setBounds(12, 10, 228, 19);
 		frmSteamScreenshotUploader.getContentPane().add(gameTitle);
-		
+		gameTitle.addActionListener(this);
+
+		list = new JList<String>(Lmodel);
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		list.setBounds(12, 39, 228, 392);
+		list.addListSelectionListener(this);
 		frmSteamScreenshotUploader.getContentPane().add(list);
-		
+
 		imagePlace.setBounds(252, 10, 360, 270);
 		frmSteamScreenshotUploader.getContentPane().add(imagePlace);
-		
+
 		submit.setEnabled(false);
 		submit.setBounds(252, 393, 360, 38);
 		frmSteamScreenshotUploader.getContentPane().add(submit);
@@ -88,12 +112,12 @@ public class Viewer extends JFrame implements ActionListener {
 
 		accountName.setBounds(252, 296, 257, 13);
 		frmSteamScreenshotUploader.getContentPane().add(accountName);
-		
+
 		auth.setBounds(521, 292, 91, 21);
 		frmSteamScreenshotUploader.getContentPane().add(auth);
 		auth.addActionListener(this);
 		auth.setActionCommand("auth");
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(252, 319, 360, 64);
 		frmSteamScreenshotUploader.getContentPane().add(scrollPane);
@@ -124,7 +148,7 @@ public class Viewer extends JFrame implements ActionListener {
 			} else {
 				t.authorization(value);
 				try {
-					accountName.setText("@"+t.twitter.getScreenName());
+					accountName.setText("@" + t.twitter.getScreenName());
 					authentication = true;
 					storeAccessToken(t.accessToken);
 					submit.setEnabled(true);
@@ -132,10 +156,25 @@ public class Viewer extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 			}
-		} else if (e.getActionCommand().equals("tweet")){
+		} else if (e.getActionCommand().equals("tweet")) {
+			if (list.getSelectedIndex() != -1) {
+				if (p.imageList[list.getSelectedIndex()].isFile()) {
+					t.tweet(text.getText(), p.imageList[list.getSelectedIndex()]);
+					text.setText("");
+				}
+			}
 		}
+
+		if (gameTitle.getSelectedIndex() > 0) {
+			Lmodel.removeAllElements();
+			p.listImage(gameTitle.getSelectedIndex() - 1);
+			for (File f : p.imageList) {
+				Lmodel.addElement(f.getName());
+			}
+
+		}
+
 	}
-	
 
 	private AccessToken loadAccessToken() {
 		ObjectInputStream is = null;
@@ -160,6 +199,31 @@ public class Viewer extends JFrame implements ActionListener {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if (list.getSelectedIndex() != -1) {
+			MediaTracker tracker = new MediaTracker(this);
+			if (p.imageList[list.getSelectedIndex()].isFile()) {
+				ImageIcon image = new ImageIcon(p.imageList[list.getSelectedIndex()].getAbsolutePath());
+				double scale = (double) image.getIconWidth() / ((double) image.getIconWidth() / 360.0);
+				System.out.println(image.getIconWidth());
+				System.out.println((int) scale);
+				Image resizeImage = image.getImage().getScaledInstance((int) scale, -1, Image.SCALE_SMOOTH);
+				tracker.addImage(resizeImage, 1);
+				ImageIcon resizedImage = new ImageIcon(resizeImage);
+				try {
+					tracker.waitForAll();
+					imagePlace.setIcon(resizedImage);
+				} catch (InterruptedException e2) {
+					e2.printStackTrace();
+				}
+			} else {
+				imagePlace.setIcon(null);
+				imagePlace.setText("THIS IS NOT IMAGE FILE.");
+			}
 		}
 	}
 }

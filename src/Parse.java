@@ -1,7 +1,9 @@
 import java.io.*;
+import java.io.FilenameFilter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Parse {
@@ -28,21 +30,16 @@ public class Parse {
 	}
 	
 	public String getTitle(int num) throws IOException {
-		url += num;
-        Document document = Jsoup.connect(url).get();
-        Elements elements = document.select("div.apphub_AppName");
-        return elements.text();
-	}
-	
-	public String getName(int num) throws IOException {
-		url2 += num;
-        Document document = Jsoup.connect(url2).get();
-        Elements elements = document.select("div.apphub_AppName");
+        Document document = Jsoup.connect(url+num).get();
+        Element elements0 = document.getElementsByClass("responsive_page_template_content").first();
+        Element elements = elements0.getElementsByClass("apphub_AppName").first();
+        //Elements elements = document.getElementsByAttribute("apphub_AppName");
         return elements.text();
 	}
 	
 	public File[] listImage(int num){
-		imageList = gameList[num].listFiles();
+		File f = new File(gameList[num]+"\\screenshots");
+		imageList = f.listFiles();
 		return imageList;
 	}
 }
