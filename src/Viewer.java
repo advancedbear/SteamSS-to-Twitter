@@ -3,23 +3,18 @@ import java.awt.Image;
 import java.awt.event.*;
 import java.awt.MediaTracker;
 import java.io.*;
-import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
-import javax.swing.JSplitPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.*;
 
-import java.awt.Color;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -29,6 +24,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+@SuppressWarnings("serial")
 public class Viewer extends JFrame implements ActionListener, ListSelectionListener {
 
 	private JFrame frmSteamScreenshotUploader;
@@ -183,6 +179,7 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		try {
 			is = new ObjectInputStream(new FileInputStream(token));
 			AccessToken accessToken = (AccessToken) is.readObject();
+			is.close();
 			return accessToken;
 		} catch (IOException e) {
 			return null;

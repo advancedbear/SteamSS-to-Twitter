@@ -1,7 +1,6 @@
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-import twitter4j.conf.ConfigurationBuilder;
 
 import java.awt.Desktop;
 import java.io.File;
