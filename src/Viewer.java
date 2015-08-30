@@ -23,6 +23,7 @@ import java.awt.Color;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -98,6 +99,7 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		list = new JList<String>(Lmodel);
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		list.setBounds(12, 39, 228, 392);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
 		frmSteamScreenshotUploader.getContentPane().add(list);
 
