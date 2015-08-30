@@ -9,6 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -25,7 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
-public class Viewer extends JFrame implements ActionListener, ListSelectionListener {
+public class Viewer extends JFrame implements ActionListener, ListSelectionListener, DocumentListener {
 
 	private JFrame frmSteamScreenshotUploader;
 
@@ -37,7 +39,11 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 	JLabel accountName = new JLabel("Please login first.");
 	JButton auth = new JButton("Login");
 	JTextArea text = new JTextArea();
-	JButton submit = new JButton("Tweet");
+	JButton submit = new JButton("Tweet (23)");
+	
+
+	
+	
 
 	File token = new File("token");
 	boolean loading = false;
@@ -100,6 +106,7 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		frmSteamScreenshotUploader.getContentPane().add(list);
 
 		imagePlace.setBounds(252, 10, 360, 270);
+		imagePlace.setHorizontalAlignment(JLabel.CENTER);
 		frmSteamScreenshotUploader.getContentPane().add(imagePlace);
 
 		submit.setEnabled(false);
@@ -121,6 +128,7 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		frmSteamScreenshotUploader.getContentPane().add(scrollPane);
 		scrollPane.setViewportView(text);
 		text.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		text.getDocument().addDocumentListener(this);
 
 		if (loadAccessToken() != null) {
 			t.authorization(loadAccessToken());
@@ -208,8 +216,6 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 			if (p.imageList[list.getSelectedIndex()].isFile()) {
 				ImageIcon image = new ImageIcon(p.imageList[list.getSelectedIndex()].getAbsolutePath());
 				double scale = (double) image.getIconWidth() / ((double) image.getIconWidth() / 360.0);
-				System.out.println(image.getIconWidth());
-				System.out.println((int) scale);
 				Image resizeImage = image.getImage().getScaledInstance((int) scale, -1, Image.SCALE_SMOOTH);
 				tracker.addImage(resizeImage, 1);
 				ImageIcon resizedImage = new ImageIcon(resizeImage);
@@ -223,6 +229,34 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 				imagePlace.setIcon(null);
 				imagePlace.setText("THIS IS NOT IMAGE FILE.");
 			}
+		}
+	}
+
+	
+	public void changedUpdate(DocumentEvent de) {
+		int num = text.getText().length()+23;
+		submit.setText("Tweet (" + num + ")");
+		if (text.getText().length() >= 140) {
+			submit.setEnabled(false);
+		} else {
+			submit.setEnabled(true);
+		}
+	}
+
+	public void insertUpdate(DocumentEvent e) {
+		int num = text.getText().length()+23;
+		submit.setText("Tweet (" + num + ")");
+		if (text.getText().length() > 117) {
+			submit.setEnabled(false);
+		}
+		
+	}
+
+	public void removeUpdate(DocumentEvent e) {
+		int num = text.getText().length()+23;
+		submit.setText("Tweet (" + num + ")");
+		if (text.getText().length() <= 118) {
+			submit.setEnabled(true);
 		}
 	}
 }
