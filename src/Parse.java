@@ -29,10 +29,11 @@ public class Parse {
 	
 	public String getTitle(int num) throws IOException {
         Document document = Jsoup.connect(url+num).get();
-        Element elements0 = document.getElementsByClass("responsive_page_template_content").first();
-        Element elements = elements0.getElementsByClass("apphub_AppName").first();
-        //Elements elements = document.getElementsByAttribute("apphub_AppName");
-        return elements.text();
+        //Element elements0 = document.getElementsByClass("responsive_page_template_content").first();
+        //Element elements = elements0.getElementsByClass("apphub_AppName").first();
+        String elements = document.title();
+        //return elements.text();
+        return elements;
 	}
 	
 	public File[] listImage(int num){
