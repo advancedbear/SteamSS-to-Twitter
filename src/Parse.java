@@ -1,8 +1,11 @@
 import java.io.*;
+import java.net.URL;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
+import com.fasterxml.jackson.databind.*;
 
 public class Parse {
 	String url, url2;
@@ -11,7 +14,7 @@ public class Parse {
 	File[] userList, gameList, imageList;
 
 	public Parse() {
-		url = "http://store.steampowered.com/app/";
+		url = "http://store.steampowered.com/api/appdetails?appids=";
 
 		/*
 		 * for(int i=0; i<folders.length; i++){ steamFolder = new
@@ -25,7 +28,7 @@ public class Parse {
 			Process process = pb.start();
 			process.waitFor();
 
-			InputStream is = process.getInputStream(); // •W€o—Í
+			InputStream is = process.getInputStream(); // ï¿½Wï¿½ï¿½ï¿½oï¿½ï¿½
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			for (;;) {
 				String line = br.readLine();
@@ -52,14 +55,18 @@ public class Parse {
 	}
 
 	public String getTitle(int num) throws IOException {
-		Document document = Jsoup.connect(url + num).get();
+		Document document = Jsoup.connect(url + num).ignoreContentType(true).get();
 		// Element elements0 =
 		// document.getElementsByClass("responsive_page_template_content").first();
 		// Element elements =
 		// elements0.getElementsByClass("apphub_AppName").first();
-		String elements = document.title();
+		String elements = document.body().html();
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(new URL(url+num));
+		String result = root.get(""+num).get("data").get("name").asText();
+		System.out.println(result);
 		// return elements.text();
-		return elements;
+		return result;
 	}
 
 	public File[] listImage(int num) {

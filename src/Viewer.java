@@ -144,12 +144,11 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		}
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("auth")) {
 			System.out.println("push auth key.");
 			t.TwitterAuth();
-			String value = JOptionPane.showInputDialog(this, "PIN”Ô†‚ğ“ü—Í‚µ‚Ä‰º‚³‚¢");
+			String value = JOptionPane.showInputDialog(this, "PINï¿½Ôï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‰ï¿½ï¿½ï¿½ï¿½ï¿½");
 			if (value == null) {
 			} else {
 				t.authorization(value);
@@ -209,7 +208,6 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		}
 	}
 
-	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (list.getSelectedIndex() != -1) {
 			MediaTracker tracker = new MediaTracker(this);
