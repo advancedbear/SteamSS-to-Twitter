@@ -26,6 +26,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+/**
+ * @author advanced_bear
+ *
+ */
+/**
+ * @author advanced_bear
+ *
+ */
 @SuppressWarnings("serial")
 public class Viewer extends JFrame implements ActionListener, ListSelectionListener, DocumentListener {
 
@@ -40,10 +48,6 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 	JButton auth = new JButton("Login");
 	JTextArea text = new JTextArea();
 	JButton submit = new JButton("Tweet (23)");
-	
-
-	
-	
 
 	File token = new File("token");
 	boolean loading = false;
@@ -148,7 +152,7 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		if (e.getActionCommand().equals("auth")) {
 			System.out.println("push auth key.");
 			t.TwitterAuth();
-			String value = JOptionPane.showInputDialog(this, "PIN�ԍ�����͂��ĉ�����");
+			String value = JOptionPane.showInputDialog(this, "PIN�ｿｽﾔ搾ｿｽ�ｿｽ�ｿｽ�ｿｽ�ｿｽﾍゑｿｽ�ｿｽﾄ会ｿｽ�ｿｽ�ｿｽ�ｿｽ�ｿｽ");
 			if (value == null) {
 			} else {
 				t.authorization(value);
@@ -230,9 +234,8 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		}
 	}
 
-	
 	public void changedUpdate(DocumentEvent de) {
-		int num = text.getText().length()+23;
+		int num = text.getText().length() + 23;
 		submit.setText("Tweet (" + num + ")");
 		if (text.getText().length() >= 140) {
 			submit.setEnabled(false);
@@ -242,16 +245,16 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 	}
 
 	public void insertUpdate(DocumentEvent e) {
-		int num = text.getText().length()+23;
+		int num = text.getText().length() + 23;
 		submit.setText("Tweet (" + num + ")");
 		if (text.getText().length() > 117) {
 			submit.setEnabled(false);
 		}
-		
+
 	}
 
 	public void removeUpdate(DocumentEvent e) {
-		int num = text.getText().length()+23;
+		int num = text.getText().length() + 23;
 		submit.setText("Tweet (" + num + ")");
 		if (text.getText().length() <= 118) {
 			submit.setEnabled(true);
