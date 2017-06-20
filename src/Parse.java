@@ -1,10 +1,6 @@
 import java.io.*;
 import java.net.URL;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import com.fasterxml.jackson.databind.*;
 
 public class Parse {
@@ -55,12 +51,6 @@ public class Parse {
 	}
 
 	public String getTitle(int num) throws IOException {
-		Document document = Jsoup.connect(url + num).ignoreContentType(true).get();
-		// Element elements0 =
-		// document.getElementsByClass("responsive_page_template_content").first();
-		// Element elements =
-		// elements0.getElementsByClass("apphub_AppName").first();
-		String elements = document.body().html();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = mapper.readTree(new URL(url+num));
 		String result = root.get(""+num).get("data").get("name").asText();

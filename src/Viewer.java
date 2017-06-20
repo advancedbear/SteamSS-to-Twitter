@@ -53,6 +53,8 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 	Parse p = new Parse();
 
 	public static void main(String[] args) {
+		System.setProperty("sun.java2d.noddraw", "true");
+	    System.setProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -97,13 +99,15 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		gameTitle.setBounds(12, 10, 228, 19);
 		frmSteamScreenshotUploader.getContentPane().add(gameTitle);
 		gameTitle.addActionListener(this);
-
-		list = new JList<String>(Lmodel);
-		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		list.setBounds(12, 39, 228, 392);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(this);
-		frmSteamScreenshotUploader.getContentPane().add(list);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(12, 39, 228, 392);
+		frmSteamScreenshotUploader.getContentPane().add(scrollPane_1);
+		
+				list = new JList<String>(Lmodel);
+				scrollPane_1.setViewportView(list);
+				list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				list.addListSelectionListener(this);
 
 		imagePlace.setBounds(252, 10, 360, 270);
 		imagePlace.setHorizontalAlignment(JLabel.CENTER);
@@ -129,6 +133,8 @@ public class Viewer extends JFrame implements ActionListener, ListSelectionListe
 		scrollPane.setViewportView(text);
 		text.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		text.getDocument().addDocumentListener(this);
+		text.setLineWrap(true);
+		text.setWrapStyleWord(true);
 
 		if (loadAccessToken() != null) {
 			t.authorization(loadAccessToken());
